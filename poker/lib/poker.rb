@@ -9,23 +9,46 @@ class Card
 end
 
 class Deck
-  SUITS = [:spade, :heart, :club, :diamond]
+
+  VALUES = [:A, 2, 3, 4, 5, 6, 7, 8, 9, 10, :J, :Q, :K]
+
+  SUITS = {
+    spade: VALUES,
+    heart: VALUES,
+    club: VALUES,
+    diamond: VALUES
+  }
+
   attr_reader :deck
 
   def initialize
-    @deck = Hash.new { |h,k| h[k] = [] }
+    @deck = []
     populate_deck
   end
 
   def populate_deck
-    SUITS.each do |suit|
-      13.times do
-        @deck[suit] << Card.new(suit, :ace)
+    SUITS.each do |suit, card_values|
+      card_values.each do |card_value|
+        @deck << Card.new(suit, card_value)
       end
     end
-
   end
 
+  def verify_suits?
+    @deck.all? do |card|
+      SUITS.keys.include?(card.suit)
+    end
+  end
+
+  def verify_value?
+    @deck.all? do |card|
+      VALUES.include?(card.value)
+    end
+  end
+
+  def shuffle_deck
+    @deck.shuffle!
+  end
 end
 
 class Hand
